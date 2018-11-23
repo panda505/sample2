@@ -1,0 +1,83 @@
+buildscript {
+    ext {
+        kotlinVersion = "1.2.71"
+        springBootVersion = "2.0.5.RELEASE"
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+        classpath "org.liquibase:liquibase-gradle-plugin:2.0.1"
+    }
+}
+
+apply plugin: "application"
+apply plugin: "kotlin"
+apply plugin: "kotlin-spring"
+apply plugin: 'org.liquibase.gradle'
+apply plugin: 'liquibase'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+compileKotlin.kotlinOptions.jvmTarget = "1.8"
+
+sourceSets.main.java.srcDirs = ["src/main/kotlin"]
+sourceSets.main.resources.srcDirs = ["src/main/resources"]
+sourceSets.test.java.srcDirs = ["src/test/kotlin"]
+sourceSets.test.resources.srcDirs = ["src/test/resources"]
+
+mainClassName = "AppLauncherKt"
+
+dependencies {
+    //kotlin
+    compile     group: "org.jetbrains.kotlin",         name: "kotlin-stdlib-jdk8",           version: kotlinVersion
+    compile     group: "org.jetbrains.kotlin",         name: "kotlin-reflect",               version: kotlinVersion
+
+    // spring
+    compile     group: "org.springframework.boot",     name: "spring-boot-starter-web",      version: springBootVersion
+
+    compile     group: "org.springframework.boot",     name: "spring-boot-starter-jdbc",     version: springBootVersion
+    compile     group: "org.postgresql",               name: "postgresql",                   version: "42.2.5"
+    compile     group: "com.zaxxer",                   name: "HikariCP",                     version: "3.2.0"
+
+    compile group: "com.fasterxml.jackson.core", name: "jackson-databind", version: "2.9.7"
+    compile group: "com.fasterxml.jackson.module", name: "jackson-module-kotlin", version: "2.9.7"
+
+    //liquibase
+    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.4.1'
+
+    compile group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.4.0'
+    compile group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.4.0'
+    //swagger2
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
+    //junit
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.3.10'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test-junit', version: '1.3.10'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.0'
+    testCompile group: 'org.springframework', name: 'spring-test', version: '5.1.2.RELEASE'
+    testCompile group: 'com.github.springtestdbunit', name: 'spring-test-dbunit', version: '1.3.0'
+    // https://mvnrepository.com/artifact/org.hamcrest/hamcrest-library
+    testCompile group: 'org.hamcrest', name: 'hamcrest-library', version: '1.3'
+    // https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
+    compile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.4.0'
+    // https://mvnrepository.com/artifact/org.dbunit/dbunit
+    testCompile group: 'org.dbunit', name: 'dbunit', version: '2.6.0'
+
+}
+
+test {
+    testLogging {
+        exceptionFormat = 'full'
+        events = ["passed", "failed", "skipped"]
+    }
+}
